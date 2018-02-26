@@ -8,6 +8,7 @@ import traceback
 import pdb
 
 import logging
+from time import sleep
 # logging.basicConfig(level=logging.ERROR)
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -72,9 +73,16 @@ def _verify(function):
                 with _export_lock:
                     with open(pjoin(gpio_root, 'export'), 'w') as f:
                         _write(f, pin)
-            value = open(pjoin(ppath, 'value'), FMODE)
-            direction = open(pjoin(ppath, 'direction'), FMODE)
-            _open[pin] = PinState(value=value, direction=direction)
+            counter = 0
+            while counter < 10:
+                try:
+                    value = open(pjoin(ppath, 'value'), FMODE)
+                    direction = open(pjoin(ppath, 'direction'), FMODE)
+                    _open[pin] = PinState(value=value, direction=direction)
+                except OSError as e:
+                    # accomodate custom udev rules for setting permissions
+                    counter += 1
+                    sleep(0.1)
         return function(pin, *args, **kwargs)
     return wrapped
 
