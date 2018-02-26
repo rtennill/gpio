@@ -6,11 +6,11 @@ import os
 import sys
 import traceback
 import pdb
-
 import logging
 from time import sleep
-# logging.basicConfig(level=logging.ERROR)
-logging.basicConfig(level=logging.DEBUG)
+
+logging.basicConfig(level=logging.ERROR)
+# logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
