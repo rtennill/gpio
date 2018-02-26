@@ -32,8 +32,6 @@ class PinState(object):
         self.value = value
         self.direction = direction
 
-sys.excepthook = except_hook
-
 path = os.path
 pjoin = os.path.join
 
@@ -115,7 +113,7 @@ def cleanup(pin=None, assert_exists=False):
 
 
 @_verify
-def setup(pin, mode, pullup=None, initial=False):
+def setup(pin, mode, pullup=None, initial=False, with_hook=False):
     '''Setup pin with mode IN or OUT.
 
     Args:
@@ -125,6 +123,10 @@ def setup(pin, mode, pullup=None, initial=False):
             value Error
         pullup (bool, optional): Initial pin value. Default is False
     '''
+
+    if with_hook:
+        sys.excepthook = except_hook
+
     if pullup is not None:
         raise ValueError("sysfs does not support pullups")
 
